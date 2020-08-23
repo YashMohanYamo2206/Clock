@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText"
+    tools:context=".Activities.setAlarm">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="62dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/alarm_time_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <CheckBox
+            android:id="@+id/MONDAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+
+            android:text="MONDAY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.152"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.05" />
+
+        <CheckBox
+            android:id="@+id/TUESDAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:checked="true"
+
+            android:text="TUESDAY"
+            app:layout_constraintStart_toStartOf="@+id/MONDAY"
+            app:layout_constraintTop_toBottomOf="@+id/MONDAY"
+             />
+
+        <CheckBox
+            android:id="@+id/WEDNESDAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:checked="true"
+
+            android:text="WEDNESDAY"
+            app:layout_constraintStart_toStartOf="@+id/MONDAY"
+            app:layout_constraintTop_toBottomOf="@+id/TUESDAY" />
+
+        <CheckBox
+            android:id="@+id/THURSDAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:checked="true"
+
+            android:text="THURSDAY"
+            app:layout_constraintStart_toStartOf="@+id/MONDAY"
+            app:layout_constraintTop_toBottomOf="@+id/WEDNESDAY" />
+
+        <CheckBox
+            android:id="@+id/FRIDAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:checked="true"
+
+            android:text="FRIDAY"
+            app:layout_constraintStart_toStartOf="@+id/MONDAY"
+            app:layout_constraintTop_toBottomOf="@+id/THURSDAY" />
+
+        <CheckBox
+            android:id="@+id/SATURDAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:checked="true"
+
+            android:text="SATURDAY"
+            app:layout_constraintStart_toStartOf="@+id/MONDAY"
+            app:layout_constraintTop_toBottomOf="@+id/FRIDAY" />
+
+        <CheckBox
+            android:id="@+id/SUNDAY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:checked="true"
+
+            android:text="SUNDAY"
+            app:layout_constraintStart_toStartOf="@+id/MONDAY"
+            app:layout_constraintTop_toBottomOf="@+id/SATURDAY" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/alarm_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00 AM"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/setTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.897" />
+
+    <Button
+        android:id="@+id/setTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="set time"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.618" />
+
+    <Button
+        android:id="@+id/setAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        android:text="set alarm"
+        app:layout_constraintEnd_toEndOf="@+id/setTime"
+        app:layout_constraintHorizontal_bias="0.583"
+        app:layout_constraintStart_toStartOf="@+id/setTime"
+        app:layout_constraintTop_toBottomOf="@+id/setTime" />
+</androidx.constraintlayout.widget.ConstraintLayout>

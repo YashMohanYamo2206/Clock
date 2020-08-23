@@ -20,12 +20,12 @@ import com.yash.clock.DatabaseHandler.database;
 import java.util.Calendar;
 
 public class timePicker extends DialogFragment {
-    Calendar calendar = Calendar.getInstance();
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MONTH);
-        return new TimePickerDialog(getContext(),(TimePickerDialog.OnTimeSetListener) getParentFragment(), hour, minute, DateFormat.is24HourFormat(getActivity()));
+        return new TimePickerDialog(getContext(),(TimePickerDialog.OnTimeSetListener) getContext(), hour, minute, DateFormat.is24HourFormat(getActivity()));
     }
 }

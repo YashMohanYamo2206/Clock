@@ -18,6 +18,7 @@ public class database extends SQLiteOpenHelper {
                 alarm_data_contract.alarm_data_contract_columns.TABLE_NAME + " (" +
                 alarm_data_contract.alarm_data_contract_columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 alarm_data_contract.alarm_data_contract_columns.TIME + " TEXT NOT NULL, " +
+                alarm_data_contract.alarm_data_contract_columns.REQ_CODE + " TEXT NOT NULL, " +
                 alarm_data_contract.alarm_data_contract_columns.IsAlarmOn + " TEXT NOT NULL, " +
                 alarm_data_contract.alarm_data_contract_columns.TIME_STAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                 ");";

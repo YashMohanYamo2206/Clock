@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +24,15 @@ import java.util.List;
 public class alarms_adapter extends RecyclerView.Adapter<alarms_adapter.alarms_viewHolder> {
 
     Cursor cursor;
-
+    public onItemClickListener mListener;
+    public interface onItemClickListener{
+        void onSwitchClick(int position,boolean isChecked);
+        void onEditClick(int position);
+        void onLongPress(int position);
+    }
+    public void setOnItemClickListener(onItemClickListener listener){
+        mListener = listener;
+    }
     public alarms_adapter(Cursor cursor) {
         this.cursor = cursor;
     }
@@ -37,6 +47,41 @@ public class alarms_adapter extends RecyclerView.Adapter<alarms_adapter.alarms_v
             alarm_time = itemView.findViewById(R.id.alarm_time);
             Switch = itemView.findViewById(R.id.alarm_switch);
             edit = itemView.findViewById(R.id.edit_alarm);
+            Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        boolean checked = isChecked;
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onSwitchClick(position,checked);
+                        }
+                    }
+                }
+            });
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onEditClick(position);
+                        }
+                    }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mListener.onLongPress(position);
+                        }
+                    }
+                    return true;
+                }
+            });
         }
     }
 

@@ -5,15 +5,19 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +26,7 @@ import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-
+import com.yash.clock.Activities.setAlarm;
 import com.yash.clock.Adapter.alarms_adapter;
 import com.yash.clock.Alerts_and_Notifications.AlertReceiver;
 import com.yash.clock.DatabaseHandler.alarm_data_contract;
@@ -31,9 +35,10 @@ import com.yash.clock.R;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
 
-public class alarm extends Fragment implements TimePickerDialog.OnTimeSetListener {
+public class alarm extends Fragment implements  alarms_adapter.onItemClickListener {
     Button addAlarm;
     RecyclerView recyclerView;
     public static alarms_adapter adapter;
@@ -56,8 +61,8 @@ public class alarm extends Fragment implements TimePickerDialog.OnTimeSetListene
         addAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment timePicker = new timePicker();
-                timePicker.show(getChildFragmentManager(), "time picker");
+                Intent intent = new Intent(getActivity(), setAlarm.class);
+                startActivity(intent);
             }
         });
         return view;
@@ -72,8 +77,9 @@ public class alarm extends Fragment implements TimePickerDialog.OnTimeSetListene
     private void init_recyclerView() {
         database dbHelper = new database(getContext());
         mDatabase = dbHelper.getReadableDatabase();
-        recyclerView = getView().findViewById(R.id.alarm_recycler_view);
+        recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.alarm_recycler_view);
         adapter = new alarms_adapter(getAllItems());
+        adapter.setOnItemClickListener(this);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -92,38 +98,62 @@ public class alarm extends Fragment implements TimePickerDialog.OnTimeSetListene
         );
     }
 
+
+
+    private void setAlarm(Calendar calendar, int req_code) {
+        AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), req_code, intent, 0);
+        assert alarmManager != null;
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+
     @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    public void onSwitchClick(int position, boolean isChecked) {
+        if (!isChecked) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(alarm_data_contract.alarm_data_contract_columns.IsAlarmOn, "false");
+            mDatabase.update(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, contentValues,
+                    alarm_data_contract.alarm_data_contract_columns.REQ_CODE + "=?",
+                    new String[]{String.valueOf(getAllItems().getCount() - position)});
 
-        Calendar calendar;
+        } else {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(alarm_data_contract.alarm_data_contract_columns.IsAlarmOn, "true");
+            mDatabase.update(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, contentValues,
+                    alarm_data_contract.alarm_data_contract_columns.REQ_CODE + "=?",
+                    new String[]{String.valueOf(getAllItems().getCount() - position)});
+        }
+    }
 
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        String time = DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(alarm_data_contract.alarm_data_contract_columns.TIME, time);
-        contentValues.put(alarm_data_contract.alarm_data_contract_columns.IsAlarmOn, "true");
-        mDatabase.insert(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, null, contentValues);
-
-
-        adapter.swapCursor(getAllItems());
-        adapter.notifyDataSetChanged();
-        setAlarm(calendar);
-        Toast.makeText(getContext(), "ALARM SET FOR : " +time, Toast.LENGTH_SHORT).show();
+    @Override
+    public void onEditClick(int position) {
 
     }
 
-    private void setAlarm(Calendar calendar) {
-        AlarmManager alarmManager =  (AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE);
-        Intent intent = new Intent(getContext(), AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, 0);
-        //if (calendar.before(Calendar.getInstance())) {
-          //  calendar.add(Calendar.DATE, 1);
-        //}
-        assert alarmManager != null;
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    @Override
+    public void onLongPress(int position) {
+        final int pos = position;
+        Toast.makeText(getContext(), ""+position, Toast.LENGTH_SHORT).show();
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        builder.setMessage("").setCancelable(
+                true).setPositiveButton("DELETE",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mDatabase.delete(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME,
+                                alarm_data_contract.alarm_data_contract_columns.REQ_CODE+"=?",new String[]{String.valueOf(getAllItems().getCount()-pos)});
+                        adapter.swapCursor(getAllItems());
+                        adapter.notifyDataSetChanged();
+                        dialog.cancel();
+                    }
+                }).setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

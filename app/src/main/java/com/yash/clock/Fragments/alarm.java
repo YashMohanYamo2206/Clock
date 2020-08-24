@@ -206,6 +206,7 @@ public class alarm extends Fragment implements alarms_adapter.onItemClickListene
             }
         }
         Intent intent = new Intent(getActivity(), setAlarm.class);
+        intent.putExtra("req_code",getAllItems().getCount() - position);
         intent.putExtra("isEdit", true);
         intent.putExtra("hour",hour);
         intent.putExtra("min",min);

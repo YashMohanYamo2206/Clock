@@ -145,8 +145,6 @@ public class setAlarm extends AppCompatActivity implements TimePickerDialog.OnTi
                         ContentValues contentValues = new ContentValues();
                         contentValues.put(alarm_data_contract.alarm_data_contract_columns.TIME, time);
                         mDatabase.update(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, contentValues, alarm_data_contract.alarm_data_contract_columns.REQ_CODE + "=?", new String[]{String.valueOf(req_code)});
-                        Toast.makeText(setAlarm.this, "" + mDatabase.update(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, contentValues, alarm_data_contract.alarm_data_contract_columns.REQ_CODE + "=?", new String[]{String.valueOf(req_code)}), Toast.LENGTH_SHORT).show();
-                        //Toast.makeText(setAlarm.this, "ALARM SET FOR : " + time, Toast.LENGTH_SHORT).show();
                         set_Alarm(calendar, req_code);
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
@@ -155,7 +153,7 @@ public class setAlarm extends AppCompatActivity implements TimePickerDialog.OnTi
                                 finish();
                             }
                         }, 50);
-                        alarm.adapter.notifyDataSetChanged();
+                        alarm.adapter.swapCursor(getAllItems());
                     }
                 } catch (Exception e) {
                     System.out.println(e.getMessage());

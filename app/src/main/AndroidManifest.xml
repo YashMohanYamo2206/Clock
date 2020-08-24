@@ -11,9 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".after_notification_tap"></activity>
+        <activity android:name=".Activities.after_notification_tap"></activity>
         <activity android:name=".Activities.setAlarm" />
-        <activity android:name=".Activities.alertDialog" />
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

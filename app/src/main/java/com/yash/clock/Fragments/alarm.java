@@ -1,6 +1,7 @@
 package com.yash.clock.Fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -19,10 +20,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -33,12 +38,12 @@ import com.yash.clock.DatabaseHandler.alarm_data_contract;
 import com.yash.clock.DatabaseHandler.database;
 import com.yash.clock.R;
 
-import java.text.DateFormat;
+import java.text.Format;
 import java.util.Calendar;
 import java.util.Objects;
 
 
-public class alarm extends Fragment implements  alarms_adapter.onItemClickListener {
+public class alarm extends Fragment implements alarms_adapter.onItemClickListener {
     Button addAlarm;
     RecyclerView recyclerView;
     public static alarms_adapter adapter;
@@ -99,61 +104,112 @@ public class alarm extends Fragment implements  alarms_adapter.onItemClickListen
     }
 
 
-
     private void setAlarm(Calendar calendar, int req_code) {
         AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getContext(), AlertReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), req_code, intent, 0);
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1);
+        }
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), req_code, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         assert alarmManager != null;
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
+    private void cancelAlarm(int req_code) {
+        AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), req_code, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        assert alarmManager != null;
+        alarmManager.cancel(pendingIntent);
+    }
 
     @Override
-    public void onSwitchClick(int position, boolean isChecked) {
-        if (!isChecked) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(alarm_data_contract.alarm_data_contract_columns.IsAlarmOn, "false");
-            mDatabase.update(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, contentValues,
-                    alarm_data_contract.alarm_data_contract_columns.REQ_CODE + "=?",
-                    new String[]{String.valueOf(getAllItems().getCount() - position)});
+    public void onSwitchClick(int position, boolean isChecked, String time, @SuppressLint("UseSwitchCompatOrMaterialCode") CompoundButton s) {
+        Calendar calendar = Calendar.getInstance();
+        int hour, min;
+        ContentValues contentValues = new ContentValues();
+        if (s.isPressed()) {
+            if (!isChecked) {
+                Toast.makeText(getContext(), "ALARM FOR " + time + " cancelled", Toast.LENGTH_SHORT).show();
+                contentValues.put(alarm_data_contract.alarm_data_contract_columns.IsAlarmOn, "false");
+                mDatabase.update(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, contentValues,
+                        alarm_data_contract.alarm_data_contract_columns.REQ_CODE + "=?",
+                        new String[]{String.valueOf(getAllItems().getCount() - position)});
+                cancelAlarm(getAllItems().getCount() - position);
 
-        } else {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(alarm_data_contract.alarm_data_contract_columns.IsAlarmOn, "true");
-            mDatabase.update(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, contentValues,
-                    alarm_data_contract.alarm_data_contract_columns.REQ_CODE + "=?",
-                    new String[]{String.valueOf(getAllItems().getCount() - position)});
+            } else {
+                contentValues.put(alarm_data_contract.alarm_data_contract_columns.IsAlarmOn, "true");
+                mDatabase.update(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME, contentValues,
+                        alarm_data_contract.alarm_data_contract_columns.REQ_CODE + "=?",
+                        new String[]{String.valueOf(getAllItems().getCount() - position)});
+                if (time.substring(2, 3).equals(":")) {
+                    hour = Integer.parseInt(time.substring(0, 2));
+                    min = (Integer.parseInt(time.substring(3, 4)) == 0) ? (Integer.parseInt(time.substring(4, 5))) : (Integer.parseInt(time.substring(3, 5)));
+                    if (!DateFormat.is24HourFormat(getContext())) {
+                        try {
+                            if (time.substring(6, 7).equals("A")) {
+                                calendar.set(Calendar.AM_PM, Calendar.AM);
+                            } else {
+                                calendar.set(Calendar.AM_PM, Calendar.PM);
+                            }
+                        } catch (Exception ignored) {
+
+                        }
+                        calendar.set(Calendar.HOUR, hour);
+                        calendar.set(Calendar.MINUTE, min);
+                    }
+                } else {
+                    hour = Integer.parseInt(time.substring(0, 1));
+                    min = (Integer.parseInt(time.substring(2, 3)) == 0) ? (Integer.parseInt(time.substring(3, 4))) : (Integer.parseInt(time.substring(2, 4)));
+                    if (!DateFormat.is24HourFormat(getContext())) {
+                        try {
+                            if (time.substring(5, 6).equals("A")) {
+                                calendar.set(Calendar.AM_PM, Calendar.AM);
+                            } else {
+                                calendar.set(Calendar.AM_PM, Calendar.PM);
+                            }
+                        } catch (Exception ignored) {
+
+                        }
+                    }
+                    calendar.set(Calendar.HOUR, hour);
+                    calendar.set(Calendar.MINUTE, min);
+                }
+                setAlarm(calendar, getAllItems().getCount() - position);
+            }
         }
     }
 
     @Override
-    public void onEditClick(int position) {
+    public void onEditClick(int position, String time) {
+        int hour, min;
+        boolean isAM = false;
+        if (time.substring(2, 3).equals(":")) {
+            hour = Integer.parseInt(time.substring(0, 2));
+            min = (Integer.parseInt(time.substring(3, 4)) == 0) ? (Integer.parseInt(time.substring(4, 5))) : (Integer.parseInt(time.substring(3, 5)));
+            if (!DateFormat.is24HourFormat(getContext())) {
+                try {
+                    isAM = time.substring(6, 7).equals("A");
+                } catch (Exception ignored) {
 
-    }
+                }
+            }
+        } else {
+            hour = Integer.parseInt(time.substring(0, 1));
+            min = (Integer.parseInt(time.substring(2, 3)) == 0) ? (Integer.parseInt(time.substring(3, 4))) : (Integer.parseInt(time.substring(2, 4)));
+            if (!DateFormat.is24HourFormat(getContext())) {
+                try {
+                    isAM = time.substring(5, 6).equals("A");
+                } catch (Exception ignored) {
 
-    @Override
-    public void onLongPress(int position) {
-        final int pos = position;
-        Toast.makeText(getContext(), ""+position, Toast.LENGTH_SHORT).show();
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(Objects.requireNonNull(getContext()));
-        builder.setMessage("").setCancelable(
-                true).setPositiveButton("DELETE",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        mDatabase.delete(alarm_data_contract.alarm_data_contract_columns.TABLE_NAME,
-                                alarm_data_contract.alarm_data_contract_columns.REQ_CODE+"=?",new String[]{String.valueOf(getAllItems().getCount()-pos)});
-                        adapter.swapCursor(getAllItems());
-                        adapter.notifyDataSetChanged();
-                        dialog.cancel();
-                    }
-                }).setNegativeButton("CANCEL",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
+                }
+            }
+        }
+        Intent intent = new Intent(getActivity(), setAlarm.class);
+        intent.putExtra("isEdit", true);
+        intent.putExtra("hour",hour);
+        intent.putExtra("min",min);
+        intent.putExtra("time",time);
+        startActivity(intent);
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:ignore="LabelFor"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#222121"
-    tools:context=".Fragments.timer">
+    tools:context=".Fragments.timer"
+    tools:ignore="LabelFor">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,19 +19,21 @@
             android:text="hours"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/edit_hours_input"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
             app:layout_constraintEnd_toEndOf="@+id/edit_hours_input"
             app:layout_constraintStart_toStartOf="@+id/edit_hours_input"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/textView" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="316dp"
             android:text="minutes"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/edit_minutes_input"
             app:layout_constraintEnd_toEndOf="@+id/edit_minutes_input"
+            app:layout_constraintHorizontal_bias="0.843"
             app:layout_constraintStart_toStartOf="@+id/edit_minutes_input"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,17 +43,18 @@
             android:text="seconds"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/edit_seconds_input"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
             app:layout_constraintEnd_toEndOf="@+id/edit_seconds_input"
             app:layout_constraintStart_toStartOf="@+id/edit_seconds_input"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/textView" />
 
         <EditText
             android:id="@+id/edit_minutes_input"
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_above="@+id/text_view_countdown"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="68dp"
+            android:importantForAutofill="no"
             android:inputType="number"
             android:maxLength="2"
             android:text="0"
@@ -59,10 +62,8 @@
             android:textColorHint="@color/off_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/edit_hours_input"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.124"
-            android:importantForAutofill="no"
-             />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="0.071" />
 
         <EditText
             android:id="@+id/edit_seconds_input"
@@ -103,14 +104,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/edit_minutes_input"
+            android:layout_marginTop="44dp"
             android:layout_toEndOf="@+id/edit_minutes_input"
+            android:background="#000"
             android:text="Set"
-            app:layout_constraintBottom_toTopOf="@+id/text_view_countdown"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="@+id/edit_minutes_input"
-            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintHorizontal_bias="0.562"
             app:layout_constraintStart_toStartOf="@+id/edit_minutes_input"
-            app:layout_constraintTop_toBottomOf="@+id/edit_minutes_input"
-            app:layout_constraintVertical_bias="0.402" />
+            app:layout_constraintTop_toBottomOf="@+id/edit_minutes_input" />
 
         <TextView
             android:id="@+id/text_view_countdown"
@@ -123,23 +125,24 @@
             android:textSize="60sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.518" />
+            app:layout_constraintVertical_bias="0.196" />
 
         <Button
-            android:visibility="invisible"
             android:id="@+id/button_start_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_countdown"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="78dp"
+            android:background="#000"
             android:text="start"
+            android:textColor="@color/colorPrimary"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/button_reset"
             app:layout_constraintEnd_toStartOf="@+id/button_reset"
-            app:layout_constraintHorizontal_bias="0.259"
+            app:layout_constraintHorizontal_bias="0.188"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/button_reset"
             app:layout_constraintVertical_bias="0.0" />
@@ -149,14 +152,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_countdown"
-            android:layout_marginEnd="76dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="68dp"
+            android:layout_marginBottom="184dp"
             android:layout_toEndOf="@+id/button_start_pause"
+            android:background="#000"
             android:text="reset"
+            android:textColor="@color/colorPrimary"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_countdown"
-            app:layout_constraintVertical_bias="0.268"
+            app:layout_constraintTop_toBottomOf="@+id/button_set"
             tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

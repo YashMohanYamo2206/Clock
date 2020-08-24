@@ -4,99 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="HardcodedText"
-    tools:context=".Activities.setAlarm">
+    android:background="#222121"
+    tools:context=".Activities.setAlarm"
+    tools:ignore="HardcodedText">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="62dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/alarm_time_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <CheckBox
-            android:id="@+id/MONDAY"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/groupRadio"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-
-            android:text="MONDAY"
+            android:checkedButton="@id/radio_id1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.152"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.05" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <CheckBox
-            android:id="@+id/TUESDAY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:checked="true"
+            <RadioButton
+                android:id="@+id/radio_id1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:text="The one with annoying sound"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
 
-            android:text="TUESDAY"
-            app:layout_constraintStart_toStartOf="@+id/MONDAY"
-            app:layout_constraintTop_toBottomOf="@+id/MONDAY"
-             />
+            <RadioButton
+                android:id="@+id/radio_id2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:text="The one with motivational sound"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
 
-        <CheckBox
-            android:id="@+id/WEDNESDAY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:checked="true"
+            <RadioButton
+                android:id="@+id/radio_id3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:text="The one with metal sound"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp" />
 
-            android:text="WEDNESDAY"
-            app:layout_constraintStart_toStartOf="@+id/MONDAY"
-            app:layout_constraintTop_toBottomOf="@+id/TUESDAY" />
-
-        <CheckBox
-            android:id="@+id/THURSDAY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:checked="true"
-
-            android:text="THURSDAY"
-            app:layout_constraintStart_toStartOf="@+id/MONDAY"
-            app:layout_constraintTop_toBottomOf="@+id/WEDNESDAY" />
-
-        <CheckBox
-            android:id="@+id/FRIDAY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:checked="true"
-
-            android:text="FRIDAY"
-            app:layout_constraintStart_toStartOf="@+id/MONDAY"
-            app:layout_constraintTop_toBottomOf="@+id/THURSDAY" />
-
-        <CheckBox
-            android:id="@+id/SATURDAY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:checked="true"
-
-            android:text="SATURDAY"
-            app:layout_constraintStart_toStartOf="@+id/MONDAY"
-            app:layout_constraintTop_toBottomOf="@+id/FRIDAY" />
-
-        <CheckBox
-            android:id="@+id/SUNDAY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:checked="true"
-
-            android:text="SUNDAY"
-            app:layout_constraintStart_toStartOf="@+id/MONDAY"
-            app:layout_constraintTop_toBottomOf="@+id/SATURDAY" />
+        </RadioGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
@@ -116,7 +74,9 @@
         android:id="@+id/setTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#000"
         android:text="set time"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -129,7 +89,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="136dp"
+        android:background="#000"
         android:text="set alarm"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="@+id/setTime"
         app:layout_constraintHorizontal_bias="0.583"
         app:layout_constraintStart_toStartOf="@+id/setTime"

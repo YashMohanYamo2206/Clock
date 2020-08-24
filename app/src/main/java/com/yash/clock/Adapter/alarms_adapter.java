@@ -25,14 +25,17 @@ public class alarms_adapter extends RecyclerView.Adapter<alarms_adapter.alarms_v
 
     Cursor cursor;
     public onItemClickListener mListener;
-    public interface onItemClickListener{
-        void onSwitchClick(int position,boolean isChecked);
-        void onEditClick(int position);
-        void onLongPress(int position);
+
+    public interface onItemClickListener {
+        void onSwitchClick(int position, boolean isChecked, String time, CompoundButton s);
+
+        void onEditClick(int position, String time);
     }
-    public void setOnItemClickListener(onItemClickListener listener){
+
+    public void setOnItemClickListener(onItemClickListener listener) {
         mListener = listener;
     }
+
     public alarms_adapter(Cursor cursor) {
         this.cursor = cursor;
     }
@@ -54,7 +57,7 @@ public class alarms_adapter extends RecyclerView.Adapter<alarms_adapter.alarms_v
                         int position = getAdapterPosition();
                         boolean checked = isChecked;
                         if (position != RecyclerView.NO_POSITION) {
-                            mListener.onSwitchClick(position,checked);
+                            mListener.onSwitchClick(position, checked, (String) alarm_time.getText(), Switch);
                         }
                     }
                 }
@@ -65,21 +68,9 @@ public class alarms_adapter extends RecyclerView.Adapter<alarms_adapter.alarms_v
                     if (mListener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            mListener.onEditClick(position);
+                            mListener.onEditClick(position, (String) alarm_time.getText());
                         }
                     }
-                }
-            });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (mListener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            mListener.onLongPress(position);
-                        }
-                    }
-                    return true;
                 }
             });
         }

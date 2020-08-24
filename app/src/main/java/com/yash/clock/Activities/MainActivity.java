@@ -4,7 +4,10 @@ import android.os.Bundle;
 
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+import com.yash.clock.Fragments.alarm;
 import com.yash.clock.Fragments.page_adapter;
+import com.yash.clock.Fragments.stopWatch;
+import com.yash.clock.Fragments.timer;
 import com.yash.clock.R;
 
 import androidx.viewpager.widget.PagerAdapter;
@@ -15,8 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
-    TabItem alarm, stopWatch, timer;
-    PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +25,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.view_pager);
-        alarm = findViewById(R.id.alarm);
-        stopWatch = findViewById(R.id.stop_watch);
-        timer = findViewById(R.id.timer);
-        pagerAdapter = new page_adapter(getSupportFragmentManager(), tabLayout.getTabCount());
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setAdapter(pagerAdapter);
+        setUpViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -47,5 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void setUpViewPager(ViewPager viewPager){
+        page_adapter page_adapter = new page_adapter(getSupportFragmentManager(),3);
+        page_adapter.addFragment(new alarm(),"ALARM");
+        page_adapter.addFragment(new stopWatch(),"STOP WATCH");
+        page_adapter.addFragment(new timer(),"TIMER");
+        viewPager.setAdapter(page_adapter);
     }
 }
